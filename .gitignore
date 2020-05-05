@@ -1,0 +1,6 @@
+# Remove webstorm files
+.idea
+
+# Remove node modules
+node_modules
+
