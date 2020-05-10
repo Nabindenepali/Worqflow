@@ -2,12 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const fileUpload = require('express-fileupload');
 
 const auth = require('./routes/api/auth');
 const profile = require('./routes/api/profile');
 const worklogs = require('./routes/api/worklogs');
 
 const app = express();
+
+// Enable file upload
+app.use(fileUpload({
+    createParentPath: true
+}));
 
 // Body parser middleware
 app.use(bodyParser.urlencoded({extended: false}));

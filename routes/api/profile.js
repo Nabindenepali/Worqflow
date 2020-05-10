@@ -35,7 +35,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 // @desc   Create or edit user profile
 // @access Private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
-    const {errors, isValid} = validateProfileInput(req.body);
+    const {errors, isValid} = validateProfileInput(req.body, req.files);
 
     // Check Validation
     if (!isValid) {
@@ -43,15 +43,35 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     }
 
     // Get fields
-    const profileFeilds = {};
-    profileFeilds.user = req.user.id;
-    if (req.body.first_name) profileFeilds.first_name = req.body.first_name;
-    if (req.body.last_name) profileFeilds.last_name = req.body.last_name;
-    if (req.body.avatar) profileFeilds.avatar = req.body.avatar;
-    if (req.body.date_of_birth) profileFeilds.date_of_birth = req.body.date_of_birth;
-    if (req.body.address) profileFeilds.address = req.body.address;
-    if (req.body.country) profileFeilds.country = req.body.country;
-    if (req.body.profession ) profileFeilds.profession = req.body.profession;
+    const profileFields = {};
+    profileFields.user = req.user.id;
+    if (req.body.first_name) profileFields.first_name = req.body.first_name;
+    if (req.body.last_name) profileFields.last_name = req.body.last_name;
+    if (req.body.date_of_birth) profileFields.date_of_birth = req.body.date_of_birth;
+    if (req.body.address) profileFields.address = req.body.address;
+    if (req.body.country) profileFields.country = req.body.country;
+    if (req.body.profession ) profileFields.profession = req.body.profession;
+
+    // Handle avatar upload
+    if (req.files) {
+        try {
+            // Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
+            const avatar = req.files.avatar;
+
+            // Encode the filename in Base64
+            const fileName = avatar.name.split('.');
+            const buffer = new Buffer(fileName[0]);
+            const newFileName = buffer.toString('base64') + '.' + fileName[1];
+
+            // Use the mv() method to place the file in upload directory (i.e. "uploads")
+            avatar.mv('./uploads/avatars/' + newFileName);
+
+            // Save the fileName as avatar field
+            profileFields.avatar = newFileName;
+        } catch (err) {
+            res.status(500).send(err);
+        }
+    }
 
     Profile.findOne({user: req.user.id})
         .then(profile => {
@@ -59,14 +79,14 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
                 // Update
                 Profile.findOneAndUpdate(
                     {user: req.user.id},
-                    {$set: profileFeilds},
+                    {$set: profileFields},
                     {new: true}
                 ).then(profile => res.json(profile));
             } else {
                 // Create
 
                 // Save Profile
-                new Profile(profileFeilds).save().then(profile => res.json(profile));
+                new Profile(profileFields).save().then(profile => res.json(profile));
             }
         })
 });

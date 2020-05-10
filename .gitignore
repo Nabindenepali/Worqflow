@@ -4,3 +4,5 @@
 # Remove node modules
 node_modules
 
+# Remove uploads directory
+uploads

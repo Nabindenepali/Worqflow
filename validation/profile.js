@@ -3,7 +3,7 @@ const isEmpty = require('./is-empty');
 const countries = require('country-data').countries;
 const moment = require('moment');
 
-module.exports = function validateProfileInput(data) {
+module.exports = function validateProfileInput(data, files) {
     let errors = {};
 
     data.first_name = !isEmpty(data.first_name) ? data.first_name : '';
@@ -11,6 +11,16 @@ module.exports = function validateProfileInput(data) {
     data.date_of_birth = !isEmpty(data.date_of_birth) ? data.date_of_birth : '';
     data.address = !isEmpty(data.address) ? data.address : '';
     data.country = !isEmpty(data.country) ? data.country : '';
+
+    if (files) {
+        const avatar = files.avatar;
+        console.log(avatar.size);
+        if (!avatar) {
+            errors.avatar = 'Avatar field is required';
+        } else if (avatar.size > 2*1024*1024) { // 2 MB, avatar.size gives bytes
+            errors.avatar = 'File size for avatar can not exceed 2 MB'
+        }
+    }
 
     if (Validator.isEmpty(data.first_name)) {
         errors.first_name = 'First name field is required';
