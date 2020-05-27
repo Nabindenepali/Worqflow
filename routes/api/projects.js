@@ -39,7 +39,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     });
 
     newProject.save()
-        .then(project => res.  json(project))
+        .then(project => res.json(project))
         .catch(err => res.status(500).json(err));
 });
 
@@ -58,6 +58,41 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 
                     // Return the project
                     res.json(project);
+                })
+                .catch(() => res.status(404).json({post_not_found: 'No post was found with the given id'}));
+        })
+        .catch(err => res.status(500).json(err));
+});
+
+// @route  PUT api/projects/:id
+// @desc   Update a user project by id
+// @access Private
+router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const {errors, isValid} = validateProjectInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+        // If any errors, send 400 with errors object
+        return res.status(400).json(errors);
+    }
+
+    Profile.findOne({user: req.user.id})
+        .then(() => {
+            Project.findById(req.params.id)
+                .then(project => {
+                    // Check for project owner
+                    if (project.user.toString() !== req.user.id) {
+                        return res.status(401).json({success: false, message: 'The user is not authorized'});
+                    }
+
+                    // Set project fields from request
+                    project.category = req.body.category;
+                    project.name = req.body.name;
+
+                    // Update the project
+                    project.save()
+                        .then(project => res.json(project))
+                        .catch(err => res.status(500).json(err));
                 })
                 .catch(() => res.status(404).json({post_not_found: 'No post was found with the given id'}));
         })
