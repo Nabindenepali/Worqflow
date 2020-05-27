@@ -6,6 +6,7 @@ const fileUpload = require('express-fileupload');
 
 const auth = require('./routes/api/auth');
 const profile = require('./routes/api/profile');
+const projects = require('./routes/api/projects');
 const worklogs = require('./routes/api/worklogs');
 
 const app = express();
@@ -37,6 +38,7 @@ require('./config/passport')(passport);
 // Use Routes
 app.use('/api/auth', auth);
 app.use('/api/profile', profile);
+app.use('/api/projects', projects);
 app.use('/api/worklogs', worklogs);
 
 const port = process.env.PORT || 5000;
