@@ -4,8 +4,11 @@
   "description": "Work flow management application",
   "main": "server.js",
   "scripts": {
+    "client-install": "npm install --prefix client",
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm  run client\""
   },
   "keywords": [
     "time",
@@ -18,6 +21,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "concurrently": "^5.2.0",
     "country-data": "0.0.31",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
