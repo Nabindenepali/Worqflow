@@ -121,6 +121,24 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
         .catch(err => res.status(500).json(err));
 });
 
+// @route  GET api/projects/:id/tasks
+// @desc   Get all tasks under a project
+// @access Private
+router.get('/:id/tasks', passport.authenticate('jwt', {session: false}), (req, res) => {
+    Project.findById(req.params.id)
+        .then(project => {
+            // Check for project owner
+            if (project.user.toString() !== req.user.id) {
+                return res.status(401).json({success: false, message: 'The user is not authorized'});
+            }
+
+            Task.find({project: req.params.id})
+                .then(tasks => res.json(tasks))
+                .catch(err => res.status(500).json(err));
+        })
+        .catch(() => res.status(404).json({project_not_found: 'No project was found with the given id'}));
+});
+
 // @route  POST api/projects/:id/tasks
 // @desc   Create task under a project
 // @access Private
@@ -149,6 +167,49 @@ router.post('/:id/tasks', passport.authenticate('jwt', {session: false}), (req, 
             newTask.save()
                 .then(task => res.json(task))
                 .catch(err => res.status(500).json(err));
+        })
+        .catch(() => res.status(404).json({project_not_found: 'No project was found with the given id'}));
+});
+
+// @route  PUT api/projects/:id/tasks/:task_id
+// @desc   Update specified task under a project
+// @access Private
+router.put('/:id/tasks/:task_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const {errors, isValid} = validateTaskInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+        // If any errors, send 400 with errors object
+        return res.status(400).json(errors);
+    }
+
+    Project.findById(req.params.id)
+        .then(project => {
+            // Check for project owner
+            if (project.user.toString() !== req.user.id) {
+                return res.status(401).json({success: false, message: 'The user is not authorized'});
+            }
+
+            Task.findById(req.params.task_id)
+                .then(task => {
+                    // Check for task association
+                    if (task.project.toString() !== req.params.id) {
+                        return res.status(401).json({success: false, message: 'The task is not associated with the project'});
+                    }
+
+                    // Set task fields from request
+                    task.name = req.body.name;
+
+                    // Update the task
+                    task.save()
+                        .then(task => res.json(task))
+                        .catch(err => res.status(500).json(err));
+                })
+                .catch(() => res.status(404).json({task_not_found: 'No task was found with the given id'}));
+
+            // newTask.save()
+            //     .then(task => res.json(task))
+            //     .catch(err => res.status(500).json(err));
         })
         .catch(() => res.status(404).json({project_not_found: 'No project was found with the given id'}));
 });
