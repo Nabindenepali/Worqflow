@@ -16,6 +16,7 @@
 
 */
 import React from "react";
+
 // nodejs library that concatenates classes
 import classnames from "classnames";
 
@@ -93,7 +94,7 @@ class Landing extends React.Component {
             </section>
             {/* 1st Hero Variation */}
           </div>
-          <section className="section section-lg pt-lg-0 mt--200" style={{'padding-bottom': 0}}>
+          <section className="section section-lg pt-lg-0 mt--200" style={{'paddingBottom': 0}}>
             <Container>
               <Row className="justify-content-center">
                 <Col lg="12">

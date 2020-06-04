@@ -21,22 +21,14 @@ import { Link } from "react-router-dom";
 import Headroom from "headroom.js";
 // reactstrap components
 import {
-  Button,
   UncontrolledCollapse,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  UncontrolledDropdown,
-  Media,
   NavbarBrand,
   Navbar,
   NavItem,
-  NavLink,
   Nav,
   Container,
   Row,
-  Col,
-  UncontrolledTooltip
+  Col
 } from "reactstrap";
 
 class DemoNavbar extends React.Component {
@@ -107,10 +99,10 @@ class DemoNavbar extends React.Component {
                   </Row>
                 </div>
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
-                  <NavItem to="/register-page" tag={Link}>
+                  <NavItem to="/register" tag={Link}>
                     <span className="nav-link-inner--text">Register</span>
                   </NavItem>
-                  <NavItem to="/login-page" tag={Link}>
+                  <NavItem to="/login" tag={Link}>
                     <span className="nav-link-inner--text">Login</span>
                   </NavItem>
                 </Nav>
