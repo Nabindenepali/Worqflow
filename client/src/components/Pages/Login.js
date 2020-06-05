@@ -38,6 +38,8 @@ import {
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import classnames from 'classnames';
 
 class Login extends React.Component {
   constructor () {
@@ -70,10 +72,17 @@ class Login extends React.Component {
       password: this.state.password
     };
 
-    console.log(user);
+    axios.post('/api/auth/login', user)
+        .then(res => {
+          this.setState({errors: {}});
+          console.log(res.data);
+        })
+        .catch(err => this.setState({errors: err.response.data}));
   }
 
   render() {
+    const { errors } = this.state;
+
     return (
       <>
         <DemoNavbar />
@@ -97,34 +106,46 @@ class Login extends React.Component {
                       <div className="text-center text-muted mb-5">
                         <small>Sign in with credentials</small>
                       </div>
-                      <Form role="form" onSubmit={this.onSubmit}>
-                        <FormGroup className="mb-3">
+                      <Form noValidate role="form" onSubmit={this.onSubmit}>
+                        <FormGroup className={classnames('mb-3', {
+                          'has-danger': errors.email
+                        })}>
                           <InputGroup className="input-group-alternative">
                             <InputGroupAddon addonType="prepend">
                               <InputGroupText>
                                 <i className="ni ni-email-83" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input type="email"
+                            <Input className={classnames('form-control', {
+                              'is-invalid': errors.email
+                            })}
+                                   type="email"
                                    name="email"
                                    placeholder="Email"
                                    value={this.state.email}
                                    onChange={this.onChange}/>
+                            {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
                           </InputGroup>
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className={classnames({
+                          'has-danger': errors.password
+                        })}>
                           <InputGroup className="input-group-alternative">
                             <InputGroupAddon addonType="prepend">
                               <InputGroupText>
                                 <i className="ni ni-lock-circle-open" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input type="password"
+                            <Input className={classnames('form-control', {
+                              'is-invalid': errors.password
+                            })}
+                                   type="password"
                                    name="password"
                                    placeholder="Password"
                                    autoComplete="off"
                                    value={this.state.password}
                                    onChange={this.onChange}/>
+                            {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
                           </InputGroup>
                         </FormGroup>
                         <div className="text-center">

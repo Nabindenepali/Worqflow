@@ -17,6 +17,8 @@
 */
 import React from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import classnames from "classnames";
 
 // reactstrap components
 import {
@@ -46,7 +48,7 @@ class Register extends React.Component {
       username: '',
       email: '',
       password: '',
-      confirmation_password: '',
+      password_confirmation: '',
       errors: {}
     };
 
@@ -71,13 +73,20 @@ class Register extends React.Component {
       username: this.state.username,
       email: this.state.email,
       password: this.state.password,
-      confirmation_password: this.state.confirmation_password
+      password_confirmation: this.state.password_confirmation
     };
 
-    console.log(newUser);
+    axios.post('/api/auth/register', newUser)
+        .then(res => {
+          this.setState({errors: {}});
+          console.log(res.data);
+        })
+        .catch(err => this.setState({errors: err.response.data}));
   }
 
   render() {
+    const { errors } = this.state;
+
     return (
       <>
         <DemoNavbar />
@@ -101,63 +110,87 @@ class Register extends React.Component {
                       <div className="text-center text-muted mb-5">
                         <small>Sign up with credentials</small>
                       </div>
-                      <Form role="form" onSubmit={this.onSubmit}>
-                        <FormGroup>
+                      <Form noValidate role="form" onSubmit={this.onSubmit}>
+                        <FormGroup className={classnames({
+                          'has-danger': errors.username
+                        })}>
                           <InputGroup className="input-group-alternative mb-3">
                             <InputGroupAddon addonType="prepend">
                               <InputGroupText>
                                 <i className="ni ni-hat-3" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input type="text"
+                            <Input className={classnames('form-control', {
+                              'is-invalid': errors.username
+                            })}
+                                   type="text"
                                    name="username"
                                    placeholder="Username"
                                    value={this.state.username}
                                    onChange={this.onChange}/>
+                            {errors.username && (<div className="invalid-feedback">{errors.username}</div>)}
                           </InputGroup>
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className={classnames({
+                          'has-danger': errors.email
+                        })}>
                           <InputGroup className="input-group-alternative mb-3">
                             <InputGroupAddon addonType="prepend">
                               <InputGroupText>
                                 <i className="ni ni-email-83" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input type="email"
+                            <Input className={classnames('form-control', {
+                              'is-invalid': errors.email
+                            })}
+                                   type="email"
                                    name="email"
                                    placeholder="Email"
                                    value={this.state.email}
                                    onChange={this.onChange}/>
+                            {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
                           </InputGroup>
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className={classnames({
+                          'has-danger': errors.password
+                        })}>
                           <InputGroup className="input-group-alternative">
                             <InputGroupAddon addonType="prepend">
                               <InputGroupText>
                                 <i className="ni ni-lock-circle-open" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input type="password"
+                            <Input className={classnames('form-control', {
+                              'is-invalid': errors.password
+                            })}
+                                   type="password"
                                    name="password"
                                    placeholder="Password"
                                    autoComplete="off"
                                    value={this.state.password}
                                    onChange={this.onChange}/>
+                            {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
                           </InputGroup>
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className={classnames({
+                          'has-danger': errors.password_confirmation
+                        })}>
                           <InputGroup className="input-group-alternative">
                             <InputGroupAddon addonType="prepend">
                               <InputGroupText>
                                 <i className="ni ni-lock-circle-open" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input type="password"
-                                   name="confirmation_password"
+                            <Input className={classnames('form-control', {
+                              'is-invalid': errors.password_confirmation
+                            })}
+                                   type="password"
+                                   name="password_confirmation"
                                    placeholder="Confirm Password"
                                    autoComplete="off"
-                                   value={this.state.confirmation_password}
+                                   value={this.state.password_confirmation}
                                    onChange={this.onChange}/>
+                            {errors.password_confirmation && (<div className="invalid-feedback">{errors.password_confirmation}</div>)}
                           </InputGroup>
                         </FormGroup>
                         <div className="text-center">
