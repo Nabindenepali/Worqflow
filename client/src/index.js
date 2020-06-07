@@ -18,6 +18,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from './store';
 
 import "assets/vendor/nucleo/css/nucleo.css";
 import "assets/vendor/font-awesome/css/font-awesome.min.css";
@@ -30,13 +32,15 @@ import Login from "components/Pages/Login.js";
 import Register from "components/Pages/Register.js";
 
 ReactDOM.render(
-  <Router>
-    <Switch>
-      <Route path="/" exact render={props => <Landing {...props} />} />
-      <Route path="/login" exact render={props => <Login {...props} />} />
-      <Route path="/register" exact render={props => <Register {...props} />} />
-      <Redirect to="/" />
-    </Switch>
-  </Router>,
-  document.getElementById("root")
+    <Provider store={store}>
+        <Router>
+            <Switch>
+                <Route path="/" exact render={props => <Landing {...props} />}/>
+                <Route path="/login" exact render={props => <Login {...props} />}/>
+                <Route path="/register" exact render={props => <Register {...props} />}/>
+                <Redirect to="/"/>
+            </Switch>
+        </Router>
+    </Provider>,
+    document.getElementById("root")
 );
