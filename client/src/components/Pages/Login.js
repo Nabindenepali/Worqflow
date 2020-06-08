@@ -16,12 +16,14 @@
 
 */
 import React from "react";
+import PropTypes from 'prop-types';
+import { connect } from'react-redux';
+import { loginUser } from '../../actions/authActions';
 
 // reactstrap components
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -38,7 +40,6 @@ import {
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import classnames from 'classnames';
 
 class Login extends React.Component {
@@ -60,6 +61,16 @@ class Login extends React.Component {
     this.refs.main.scrollTop = 0;
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+
+    if (nextProps.errors) {
+      this.setState({errors: nextProps.errors});
+    }
+  }
+
   onChange(e) {
     this.setState({[e.target.name]: e.target.value});
   }
@@ -72,12 +83,7 @@ class Login extends React.Component {
       password: this.state.password
     };
 
-    axios.post('/api/auth/login', user)
-        .then(res => {
-          this.setState({errors: {}});
-          console.log(res.data);
-        })
-        .catch(err => this.setState({errors: err.response.data}));
+    this.props.loginUser(user);
   }
 
   render() {
@@ -180,4 +186,15 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(mapStateToProps, { loginUser })(Login);
