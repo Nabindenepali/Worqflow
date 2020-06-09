@@ -32,7 +32,7 @@ import {
 } from "reactstrap";
 
 // core components
-import DemoNavbar from 'components/Navbars/DemoNavbar.js';
+import WqNavbar from 'components/Navbars/WqNavbar.js';
 import CardsFooter from 'components/Footers/CardsFooter.js';
 
 class Landing extends React.Component {
@@ -45,7 +45,7 @@ class Landing extends React.Component {
   render() {
     return (
       <>
-        <DemoNavbar />
+        <WqNavbar />
         <main ref="main">
           <div className="position-relative">
             {/* shape Hero */}

@@ -16,24 +16,31 @@
 
 */
 import React from "react";
+import PropTypes from 'prop-types';
+import { connect } from'react-redux';
 
 // reactstrap components
 import { Button, Card, Container, Row, Col } from "reactstrap";
 
 // core components
-import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
+import WqNavbar from '../Navbars/WqNavbar';
 
 class Profile extends React.Component {
   componentDidMount() {
+    if (!this.props.auth.isAuthenticated) {
+      this.props.history.push('/login');
+    }
+
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
   }
+
   render() {
     return (
       <>
-        <DemoNavbar />
+        <WqNavbar />
         <main className="profile-page" ref="main">
           <section className="section-profile-cover section-shaped my-0">
             {/* Circles background */}
@@ -166,4 +173,12 @@ class Profile extends React.Component {
   }
 }
 
-export default Profile;
+Profile.propTypes = {
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(Profile);

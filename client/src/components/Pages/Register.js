@@ -39,7 +39,7 @@ import {
 } from "reactstrap";
 
 // core components
-import DemoNavbar from "components/Navbars/DemoNavbar.js";
+import WqNavbar from "components/Navbars/WqNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
 
 import { registerUser } from '../../actions/authActions';
@@ -60,6 +60,10 @@ class Register extends React.Component {
     }
 
     componentDidMount() {
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push('/profile');
+        }
+
         document.documentElement.scrollTop = 0;
         document.scrollingElement.scrollTop = 0;
         this.refs.main.scrollTop = 0;
@@ -93,7 +97,7 @@ class Register extends React.Component {
 
         return (
             <>
-                <DemoNavbar/>
+                <WqNavbar/>
                 <main ref="main">
                     <section className="section section-shaped section-lg">
                         <div className="shape shape-style-1 bg-gradient-default">

@@ -37,7 +37,7 @@ import {
 } from "reactstrap";
 
 // core components
-import DemoNavbar from "components/Navbars/DemoNavbar.js";
+import WqNavbar from "components/Navbars/WqNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
@@ -56,6 +56,10 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push('/profile');
+    }
+
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
@@ -63,7 +67,7 @@ class Login extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
-      this.props.history.push('/dashboard');
+      this.props.history.push('/profile');
     }
 
     if (nextProps.errors) {
@@ -91,7 +95,7 @@ class Login extends React.Component {
 
     return (
       <>
-        <DemoNavbar />
+        <WqNavbar />
         <main ref="main">
           <section className="section section-shaped section-lg">
             <div className="shape shape-style-1 bg-gradient-default">

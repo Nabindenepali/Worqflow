@@ -20,7 +20,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { Provider } from "react-redux";
 import jwt_decode from 'jwt-decode';
-import { setCurrentUser } from './actions/authActions';
+import { setCurrentUser, logoutUser } from './actions/authActions';
 
 import store from './store';
 import setAuthToken from './utils/setAuthToken';
@@ -34,6 +34,7 @@ import "assets/css/custom.css";
 import Landing from "components/Pages/Landing.js";
 import Login from "components/Pages/Login.js";
 import Register from "components/Pages/Register.js";
+import Profile from './components/Pages/Profile';
 
 // Check for token
 if (localStorage.getItem('jwtToken')) {
@@ -43,6 +44,16 @@ if (localStorage.getItem('jwtToken')) {
     const decoded = jwt_decode(localStorage.getItem('jwtToken'));
     // Set user and isAuthenticated
     store.dispatch(setCurrentUser(decoded));
+
+    // Check for expired token
+    const currentTime = Date.now() / 1000;
+    if (decoded.exp < currentTime) {
+        // Logout user
+        store.dispatch(logoutUser());
+        // TODO: Clear current profile
+        // Redirect to login
+        window.location.href = '/login';
+    }
 }
 
 ReactDOM.render(
@@ -52,6 +63,7 @@ ReactDOM.render(
                 <Route path="/" exact render={props => <Landing {...props} />}/>
                 <Route path="/login" exact render={props => <Login {...props} />}/>
                 <Route path="/register" exact render={props => <Register {...props} />}/>
+                <Route path="/profile" exact render={props => <Profile {...props} />}/>
                 <Redirect to="/"/>
             </Switch>
         </Router>
