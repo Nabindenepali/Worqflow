@@ -19,6 +19,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import { connect } from'react-redux';
 import { loginUser } from '../../actions/authActions';
+import TextFieldGroup from '../../components/common/TextFieldGroup';
 
 // reactstrap components
 import {
@@ -117,47 +118,24 @@ class Login extends React.Component {
                         <small>Sign in with credentials</small>
                       </div>
                       <Form noValidate role="form" onSubmit={this.onSubmit}>
-                        <FormGroup className={classnames('mb-3', {
-                          'has-danger': errors.email
-                        })}>
-                          <InputGroup className="input-group-alternative">
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="ni ni-email-83" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input className={classnames('form-control', {
-                              'is-invalid': errors.email
-                            })}
-                                   type="email"
-                                   name="email"
-                                   placeholder="Email"
-                                   value={this.state.email}
-                                   onChange={this.onChange}/>
-                            {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
-                          </InputGroup>
-                        </FormGroup>
-                        <FormGroup className={classnames({
-                          'has-danger': errors.password
-                        })}>
-                          <InputGroup className="input-group-alternative">
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="ni ni-lock-circle-open" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input className={classnames('form-control', {
-                              'is-invalid': errors.password
-                            })}
-                                   type="password"
-                                   name="password"
-                                   placeholder="Password"
-                                   autoComplete="off"
-                                   value={this.state.password}
-                                   onChange={this.onChange}/>
-                            {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
-                          </InputGroup>
-                        </FormGroup>
+                        <TextFieldGroup
+                          icon="email-83"
+                          placeholder="Email"
+                          name="email"
+                          type="email"
+                          value={this.state.email}
+                          onChange={this.onChange}
+                          error={errors.email}
+                        />
+                        <TextFieldGroup
+                            icon="lock-circle-open"
+                            placeholder="Password"
+                            name="password"
+                            type="password"
+                            value={this.state.password}
+                            onChange={this.onChange}
+                            error={errors.password}
+                        />
                         <div className="text-center">
                           <Button
                             className="my-4"
