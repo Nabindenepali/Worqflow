@@ -21,6 +21,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { logoutUser } from '../../actions/authActions';
+import { clearCurrentProfile } from '../../actions/profileActions';
 
 // JavaScript plugin that hides or shows a component based on your scroll
 import Headroom from "headroom.js";
@@ -64,6 +65,7 @@ class WqNavbar extends React.Component {
     onLogoutClick(e) {
         e.preventDefault();
 
+        this.props.clearCurrentProfile();
         this.props.logoutUser();
     }
 
@@ -156,4 +158,6 @@ const mapStateToProps = (state) => ({
     auth: state.auth
 });
 
-export default connect(mapStateToProps, {logoutUser})(WqNavbar);
+export default connect(mapStateToProps, {logoutUser, clearCurrentProfile})(
+    WqNavbar
+);

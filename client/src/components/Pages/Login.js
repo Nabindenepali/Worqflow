@@ -58,7 +58,7 @@ class Login extends React.Component {
 
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push('/profile');
+      this.props.history.push('/dashboard');
     }
 
     document.documentElement.scrollTop = 0;
@@ -68,7 +68,7 @@ class Login extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
-      this.props.history.push('/profile');
+      this.props.history.push('/dashboard');
     }
 
     if (nextProps.errors) {

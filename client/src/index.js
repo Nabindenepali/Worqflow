@@ -35,6 +35,8 @@ import Landing from "components/Pages/Landing.js";
 import Login from "components/Pages/Login.js";
 import Register from "components/Pages/Register.js";
 import Profile from './components/Pages/Profile';
+import Dashboard from './components/dashboard/Dashboard';
+import { clearCurrentProfile } from './actions/profileActions';
 
 // Check for token
 if (localStorage.getItem('jwtToken')) {
@@ -50,7 +52,8 @@ if (localStorage.getItem('jwtToken')) {
     if (decoded.exp < currentTime) {
         // Logout user
         store.dispatch(logoutUser());
-        // TODO: Clear current profile
+        // Clear current profile
+        store.dispatch(clearCurrentProfile());
         // Redirect to login
         window.location.href = '/login';
     }
@@ -63,6 +66,7 @@ ReactDOM.render(
                 <Route path="/" exact render={props => <Landing {...props} />}/>
                 <Route path="/login" exact render={props => <Login {...props} />}/>
                 <Route path="/register" exact render={props => <Register {...props} />}/>
+                <Route path="/dashboard" exact render={props => <Dashboard {...props} />}/>
                 <Route path="/profile" exact render={props => <Profile {...props} />}/>
                 <Redirect to="/"/>
             </Switch>
