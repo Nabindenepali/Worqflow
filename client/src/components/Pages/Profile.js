@@ -28,10 +28,6 @@ import WqNavbar from '../Navbars/WqNavbar';
 
 class Profile extends React.Component {
   componentDidMount() {
-    if (!this.props.auth.isAuthenticated) {
-      this.props.history.push('/');
-    }
-
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;

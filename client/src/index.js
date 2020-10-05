@@ -25,6 +25,8 @@ import { setCurrentUser, logoutUser } from './actions/authActions';
 import store from './store';
 import setAuthToken from './utils/setAuthToken';
 
+import PrivateRoute from './components/common/PrivateRoute';
+
 import "assets/vendor/nucleo/css/nucleo.css";
 import "assets/vendor/font-awesome/css/font-awesome.min.css";
 import "assets/scss/argon-design-system-react.scss?v1.1.0";
@@ -66,8 +68,8 @@ ReactDOM.render(
                 <Route path="/" exact render={props => <Landing {...props} />}/>
                 <Route path="/login" exact render={props => <Login {...props} />}/>
                 <Route path="/register" exact render={props => <Register {...props} />}/>
-                <Route path="/dashboard" exact render={props => <Dashboard {...props} />}/>
-                <Route path="/profile" exact render={props => <Profile {...props} />}/>
+                <PrivateRoute path="/dashboard" exact component={Dashboard} />
+                <PrivateRoute path="/profile" exact component={Profile} />
                 <Redirect to="/"/>
             </Switch>
         </Router>
