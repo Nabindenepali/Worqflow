@@ -24,7 +24,7 @@
     "concurrently": "^5.2.0",
     "country-data": "0.0.31",
     "express": "^4.17.1",
-    "express-fileupload": "^1.1.7-alpha.3",
+    "express-fileupload": "^1.1.9",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.25.3",
     "mongoose": "^5.9.12",
